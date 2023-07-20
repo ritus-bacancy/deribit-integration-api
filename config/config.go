@@ -9,7 +9,7 @@ const (
 	BaseURLDefaultValue = "https://test.deribit.com/api/v2"
 
 	Address             = "ADDRESS"
-	AddressDefaultValue = "localhost:8080"
+	AddressDefaultValue = ":8080"
 
 	ClientID = "CLIENT_ID"
 

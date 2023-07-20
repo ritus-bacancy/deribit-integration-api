@@ -30,7 +30,7 @@ func NewTrading(deribitClient service) *Trading {
 // Auth godoc
 // @summary Authentication endpoint
 // @description Authentication endpoint
-// @tags auth response
+// @tags auth
 // @id Auth
 // @accept json
 // @produce json
@@ -74,7 +74,7 @@ func (t *Trading) GetPrice(c echo.Context) error {
 // Buy godoc
 // @summary Buy endpoint
 // @description Buy endpoint
-// @tags buy response
+// @tags buy
 // @id Buy
 // @param Buy body request.Buy true "Body"
 // @accept json
@@ -107,7 +107,7 @@ func (t *Trading) Buy(c echo.Context) error {
 // Sell godoc
 // @summary Sell endpoint
 // @description Sell endpoint
-// @tags sell response
+// @tags sell
 // @id Sell
 // @param Sell body request.Sell true "Body"
 // @accept json
