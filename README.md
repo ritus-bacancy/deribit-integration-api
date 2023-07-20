@@ -1,5 +1,5 @@
 # Description
-An application that would periodically get data from `https://www.boredapi.com/api/activity` and save results as a proper JSON file on the hard disk.
+An application that would fetch data from `https://test.deribit.com/api/v2/`.
 
 ### Run the project in Development Mode
 ```
