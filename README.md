@@ -11,4 +11,4 @@ Additional commands:
 
 ```bash
 run                            Start application
-```# deribit-integration-api
+```
