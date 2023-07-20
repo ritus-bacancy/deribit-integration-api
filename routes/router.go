@@ -3,9 +3,11 @@ package routes
 import (
 	"integration-api/config"
 	"integration-api/handler"
+	"integration-api/request"
 	"integration-api/services/deribit"
 	"net/http"
 
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 )
 
@@ -35,6 +37,10 @@ func (a *App) initHandlers() {
 
 func (a *App) Set(e *echo.Echo, config *config.Current) {
 	a.initialize(config)
+	e.Validator = &request.CustomValidator{Validator: validator.New()}
 
 	e.POST("/auth", a.handlers.trading.Auth)
+	e.GET("/price", a.handlers.trading.GetPrice)
+	e.POST("/buy", a.handlers.trading.Buy)
+	e.POST("/sell", a.handlers.trading.Sell)
 }
