@@ -34,13 +34,18 @@ func NewClient(client httpClient, config *config.Current) *Client {
 }
 
 func (c *Client) Auth(ctx context.Context) (*Auth, error) {
-	params := fmt.Sprintf("client_id=%s&client_secret=%s&grant_type=client_credentials", c.config.ClientID, c.config.ClientSecret)
-	url := fmt.Sprintf("%s%s?%s", c.config.BaseURL, authEndpoint, params)
+	url := fmt.Sprintf("%s%s", c.config.BaseURL, authEndpoint)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request, %w", err)
 	}
+
+	q := req.URL.Query()
+	q.Add("client_id", c.config.ClientID)
+	q.Add("client_secret", c.config.ClientSecret)
+	q.Add("grant_type", "client_credentials")
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -61,13 +66,17 @@ func (c *Client) Auth(ctx context.Context) (*Auth, error) {
 }
 
 func (c *Client) GetPrice(ctx context.Context, currency string) (*Price, error) {
-	params := fmt.Sprintf("currency=%s&kind=future", currency)
-	url := fmt.Sprintf("%s%s?%s", c.config.BaseURL, getPriceEndpoint, params)
+	url := fmt.Sprintf("%s%s", c.config.BaseURL, getPriceEndpoint)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request, %w", err)
 	}
+
+	q := req.URL.Query()
+	q.Add("currency", currency)
+	q.Add("kind", "future")
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
