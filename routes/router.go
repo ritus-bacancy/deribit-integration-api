@@ -9,6 +9,10 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+
+	_ "integration-api/docs"
+
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type App struct {
@@ -38,6 +42,8 @@ func (a *App) initHandlers() {
 func (a *App) Set(e *echo.Echo, config *config.Current) {
 	a.initialize(config)
 	e.Validator = &request.CustomValidator{Validator: validator.New()}
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.POST("/auth", a.handlers.trading.Auth)
 	e.GET("/price", a.handlers.trading.GetPrice)

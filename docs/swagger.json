@@ -1,0 +1,324 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Deribit Integration API.",
+        "title": "Deribit Integration API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "paths": {
+        "/auth": {
+            "post": {
+                "description": "Authentication endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth response"
+                ],
+                "summary": "Authentication endpoint",
+                "operationId": "Auth",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deribit.Auth"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/buy": {
+            "post": {
+                "description": "Buy endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "buy response"
+                ],
+                "summary": "Buy endpoint",
+                "operationId": "Buy",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Buy",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Buy"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deribit.Buy"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/price": {
+            "get": {
+                "description": "Get the currency price",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "price"
+                ],
+                "summary": "Get the currency price",
+                "operationId": "GetPrice",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Currency",
+                        "name": "currency",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deribit.Price"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/sell": {
+            "post": {
+                "description": "Sell endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sell response"
+                ],
+                "summary": "Sell endpoint",
+                "operationId": "Sell",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Sell",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Sell"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deribit.Sell"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "deribit.Auth": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "deribit.Buy": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "result": {
+                    "$ref": "#/definitions/deribit.Result"
+                }
+            }
+        },
+        "deribit.Currency": {
+            "type": "object",
+            "properties": {
+                "base_currency": {
+                    "type": "string"
+                },
+                "estimated_delivery_price": {
+                    "type": "number"
+                },
+                "instrument_name": {
+                    "type": "string"
+                },
+                "mark_price": {
+                    "type": "number"
+                },
+                "price_change": {
+                    "type": "number"
+                },
+                "quote_currency": {
+                    "type": "string"
+                }
+            }
+        },
+        "deribit.Order": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "instrument_name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "profit_loss": {
+                    "type": "number"
+                }
+            }
+        },
+        "deribit.Price": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/deribit.Currency"
+                    }
+                }
+            }
+        },
+        "deribit.Result": {
+            "type": "object",
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/deribit.Order"
+                },
+                "trades": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/deribit.Trade"
+                    }
+                }
+            }
+        },
+        "deribit.Sell": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/deribit.Result"
+                }
+            }
+        },
+        "deribit.Trade": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "instrument_name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "trade_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.Buy": {
+            "type": "object",
+            "required": [
+                "amount",
+                "currency"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.Sell": {
+            "type": "object",
+            "required": [
+                "amount",
+                "currency",
+                "price"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BasicAuth": {
+            "type": "basic"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

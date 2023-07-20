@@ -1,0 +1,213 @@
+definitions:
+  deribit.Auth:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+    type: object
+  deribit.Buy:
+    properties:
+      id:
+        type: integer
+      result:
+        $ref: '#/definitions/deribit.Result'
+    type: object
+  deribit.Currency:
+    properties:
+      base_currency:
+        type: string
+      estimated_delivery_price:
+        type: number
+      instrument_name:
+        type: string
+      mark_price:
+        type: number
+      price_change:
+        type: number
+      quote_currency:
+        type: string
+    type: object
+  deribit.Order:
+    properties:
+      amount:
+        type: number
+      instrument_name:
+        type: string
+      price:
+        type: number
+      profit_loss:
+        type: number
+    type: object
+  deribit.Price:
+    properties:
+      result:
+        items:
+          $ref: '#/definitions/deribit.Currency'
+        type: array
+    type: object
+  deribit.Result:
+    properties:
+      order:
+        $ref: '#/definitions/deribit.Order'
+      trades:
+        items:
+          $ref: '#/definitions/deribit.Trade'
+        type: array
+    type: object
+  deribit.Sell:
+    properties:
+      result:
+        $ref: '#/definitions/deribit.Result'
+    type: object
+  deribit.Trade:
+    properties:
+      amount:
+        type: number
+      instrument_name:
+        type: string
+      price:
+        type: number
+      trade_id:
+        type: string
+    type: object
+  request.Buy:
+    properties:
+      amount:
+        type: number
+      currency:
+        type: string
+      token:
+        type: string
+    required:
+    - amount
+    - currency
+    type: object
+  request.Sell:
+    properties:
+      amount:
+        type: number
+      currency:
+        type: string
+      price:
+        type: number
+      token:
+        type: string
+    required:
+    - amount
+    - currency
+    - price
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Deribit Integration API.
+  termsOfService: http://swagger.io/terms/
+  title: Deribit Integration API
+  version: "1.0"
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Authentication endpoint
+      operationId: Auth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deribit.Auth'
+        "500":
+          description: Internal Server Error
+      summary: Authentication endpoint
+      tags:
+      - auth response
+  /buy:
+    post:
+      consumes:
+      - application/json
+      description: Buy endpoint
+      operationId: Buy
+      parameters:
+      - description: Body
+        in: body
+        name: Buy
+        required: true
+        schema:
+          $ref: '#/definitions/request.Buy'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deribit.Buy'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Buy endpoint
+      tags:
+      - buy response
+  /price:
+    get:
+      description: Get the currency price
+      operationId: GetPrice
+      parameters:
+      - description: Currency
+        in: query
+        name: currency
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deribit.Price'
+        "500":
+          description: Internal Server Error
+      summary: Get the currency price
+      tags:
+      - price
+  /sell:
+    post:
+      consumes:
+      - application/json
+      description: Sell endpoint
+      operationId: Sell
+      parameters:
+      - description: Body
+        in: body
+        name: Sell
+        required: true
+        schema:
+          $ref: '#/definitions/request.Sell'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deribit.Sell'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Sell endpoint
+      tags:
+      - sell response
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

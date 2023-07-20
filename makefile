@@ -18,3 +18,6 @@ dep-down:
 
 dep-stop:
 	${docker-command} stop
+
+swag: ## Generate swagger docs
+	swag init -o ./docs

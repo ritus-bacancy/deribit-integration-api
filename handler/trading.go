@@ -27,18 +27,35 @@ func NewTrading(deribitClient service) *Trading {
 	}
 }
 
+// Auth godoc
+// @summary Authentication endpoint
+// @description Authentication endpoint
+// @tags auth response
+// @id Auth
+// @accept json
+// @produce json
+// @Router /auth [POST]
+// @response 200 {object} deribit.Auth "OK"
+// @Failure  500
 func (t *Trading) Auth(c echo.Context) error {
 	auth, err := t.deribitClient.Auth(c.Request().Context())
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"access_token":  auth.AccessToken,
-		"refresh_token": auth.RefreshToken,
-		"expitres_in":   auth.ExpiresIn,
-	})
+	return c.JSON(http.StatusOK, auth)
 }
 
+// GetPrice godoc
+// @summary Get the currency price
+// @description Get the currency price
+// @tags price
+// @id GetPrice
+// @Param currency query string  false  "Currency"
+// @produce json
+// @Router /price [GET]
+// @response 200 {object} deribit.Price "OK"
+// @Success  200 {object} deribit.Price "OK"
+// @Failure  500
 func (t *Trading) GetPrice(c echo.Context) error {
 	currency := c.QueryParam("currency")
 	if currency == "" {
@@ -54,6 +71,18 @@ func (t *Trading) GetPrice(c echo.Context) error {
 	return c.JSON(http.StatusOK, buy)
 }
 
+// Buy godoc
+// @summary Buy endpoint
+// @description Buy endpoint
+// @tags buy response
+// @id Buy
+// @param Buy body request.Buy true "Body"
+// @accept json
+// @produce json
+// @Router /buy [POST]
+// @response 200 {object} deribit.Buy "OK"
+// @Failure  400
+// @Failure  500
 func (t *Trading) Buy(c echo.Context) error {
 	var req request.Buy
 	if err := c.Bind(&req); err != nil {
@@ -75,6 +104,18 @@ func (t *Trading) Buy(c echo.Context) error {
 	return c.JSON(http.StatusOK, buy)
 }
 
+// Sell godoc
+// @summary Sell endpoint
+// @description Sell endpoint
+// @tags sell response
+// @id Sell
+// @param Sell body request.Sell true "Body"
+// @accept json
+// @produce json
+// @Router /sell [POST]
+// @response 200 {object} deribit.Sell "OK"
+// @Failure  400
+// @Failure  500
 func (t *Trading) Sell(c echo.Context) error {
 	var req request.Sell
 	if err := c.Bind(&req); err != nil {
