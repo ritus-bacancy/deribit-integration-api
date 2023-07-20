@@ -139,8 +139,6 @@ func (c *Client) Sell(ctx context.Context, request request.Sell) (*Sell, error) 
 	q.Add("trigger_price", strconv.FormatFloat(request.Price, 'f', 2, 64))
 	req.URL.RawQuery = q.Encode()
 
-	fmt.Println(req.URL.String())
-
 	var bearer = "Bearer " + request.Token
 	req.Header.Add("Authorization", bearer)
 
