@@ -23,7 +23,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "auth response"
+                    "auth"
                 ],
                 "summary": "Authentication endpoint",
                 "operationId": "Auth",
@@ -50,7 +50,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "buy response"
+                    "buy"
                 ],
                 "summary": "Buy endpoint",
                 "operationId": "Buy",
@@ -123,7 +123,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "sell response"
+                    "sell"
                 ],
                 "summary": "Sell endpoint",
                 "operationId": "Sell",

@@ -131,7 +131,7 @@ paths:
           description: Internal Server Error
       summary: Authentication endpoint
       tags:
-      - auth response
+      - auth
   /buy:
     post:
       consumes:
@@ -158,7 +158,7 @@ paths:
           description: Internal Server Error
       summary: Buy endpoint
       tags:
-      - buy response
+      - buy
   /price:
     get:
       description: Get the currency price
@@ -206,7 +206,7 @@ paths:
           description: Internal Server Error
       summary: Sell endpoint
       tags:
-      - sell response
+      - sell
 securityDefinitions:
   BasicAuth:
     type: basic

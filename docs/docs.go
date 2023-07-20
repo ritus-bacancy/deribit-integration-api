@@ -31,7 +31,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth response"
+                    "auth"
                 ],
                 "summary": "Authentication endpoint",
                 "operationId": "Auth",
@@ -58,7 +58,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "buy response"
+                    "buy"
                 ],
                 "summary": "Buy endpoint",
                 "operationId": "Buy",
@@ -131,7 +131,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "sell response"
+                    "sell"
                 ],
                 "summary": "Sell endpoint",
                 "operationId": "Sell",
