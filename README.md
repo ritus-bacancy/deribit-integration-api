@@ -11,6 +11,10 @@ Additional commands:
 
 ```bash
 run                            Start application
+dep-build-up                   Start and build container
+dep-up                         Create and start container
+dep-down                       Stop and remove container, networks
+dep-stop                       Stop services
 ```
 ## Available Endpoint
 
