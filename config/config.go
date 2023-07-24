@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"os"
 )
 
@@ -14,6 +15,8 @@ const (
 	ClientID = "CLIENT_ID"
 
 	ClientSecret = "CLIENT_SECRET"
+
+	Password = "PASSWORD"
 )
 
 type Current struct {
@@ -21,14 +24,16 @@ type Current struct {
 	BaseURL      string
 	ClientID     string
 	ClientSecret string
+	Password     string
 }
 
 func Load() *Current {
 	return &Current{
 		BaseURL:      getString(BaseURL, BaseURLDefaultValue),
 		Address:      getString(Address, AddressDefaultValue),
-		ClientID:     os.Getenv(ClientID),
-		ClientSecret: os.Getenv(ClientSecret),
+		ClientID:     notEmpty(ClientID, os.Getenv(ClientID)),
+		ClientSecret: notEmpty(ClientSecret, os.Getenv(ClientSecret)),
+		Password:     notEmpty(Password, os.Getenv(Password)),
 	}
 }
 
@@ -36,6 +41,13 @@ func getString(key string, defaultValue string) string {
 	val := os.Getenv(key)
 	if val == "" {
 		return defaultValue
+	}
+	return val
+}
+
+func notEmpty(key string, val string) string {
+	if val == "" {
+		log.Fatalf("value is not provided for %s", key)
 	}
 	return val
 }

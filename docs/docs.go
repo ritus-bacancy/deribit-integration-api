@@ -161,6 +161,47 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/webhook": {
+            "post": {
+                "description": "Webhook endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook"
+                ],
+                "summary": "Webhook endpoint",
+                "operationId": "Webhook",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Webhook",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Webhook"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deribit.Buy"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -283,7 +324,8 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "amount",
-                "currency"
+                "currency",
+                "token"
             ],
             "properties": {
                 "amount": {
@@ -302,7 +344,8 @@ const docTemplate = `{
             "required": [
                 "amount",
                 "currency",
-                "price"
+                "price",
+                "token"
             ],
             "properties": {
                 "amount": {
@@ -316,6 +359,30 @@ const docTemplate = `{
                 },
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "request.Webhook": {
+            "type": "object",
+            "required": [
+                "operation",
+                "password"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "operation": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
                 }
             }
         }

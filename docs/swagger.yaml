@@ -84,6 +84,7 @@ definitions:
     required:
     - amount
     - currency
+    - token
     type: object
   request.Sell:
     properties:
@@ -99,6 +100,23 @@ definitions:
     - amount
     - currency
     - price
+    - token
+    type: object
+  request.Webhook:
+    properties:
+      amount:
+        type: number
+      currency:
+        type: string
+      operation:
+        type: string
+      password:
+        type: string
+      price:
+        type: number
+    required:
+    - operation
+    - password
     type: object
 externalDocs:
   description: OpenAPI
@@ -207,6 +225,33 @@ paths:
       summary: Sell endpoint
       tags:
       - sell
+  /webhook:
+    post:
+      consumes:
+      - application/json
+      description: Webhook endpoint
+      operationId: Webhook
+      parameters:
+      - description: Body
+        in: body
+        name: Webhook
+        required: true
+        schema:
+          $ref: '#/definitions/request.Webhook'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deribit.Buy'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Webhook endpoint
+      tags:
+      - webhook
 securityDefinitions:
   BasicAuth:
     type: basic

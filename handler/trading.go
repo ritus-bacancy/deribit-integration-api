@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"fmt"
+	"integration-api/config"
 	"integration-api/request"
 	"integration-api/services/deribit"
 	"log"
@@ -19,11 +21,13 @@ type service interface {
 
 type Trading struct {
 	deribitClient service
+	config        *config.Current
 }
 
-func NewTrading(deribitClient service) *Trading {
+func NewTrading(deribitClient service, config *config.Current) *Trading {
 	return &Trading{
 		deribitClient: deribitClient,
+		config:        config,
 	}
 }
 
@@ -135,4 +139,77 @@ func (t *Trading) Sell(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, sell)
+}
+
+// Webhook godoc
+// @summary Webhook endpoint
+// @description Webhook endpoint
+// @tags webhook
+// @id Webhook
+// @param Webhook body request.Webhook true "Body"
+// @accept json
+// @produce json
+// @Router /webhook [POST]
+// @response 200 {object} deribit.Sell "OK"
+// @response 200 {object} deribit.Buy "OK"
+// @Failure  400
+// @Failure  500
+func (t *Trading) Webhook(c echo.Context) error {
+	var req request.Webhook
+	if err := c.Bind(&req); err != nil {
+		log.Printf("error in sell request, %s", err.Error())
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if req.Password != t.config.Password {
+		log.Printf("invalid password ")
+		return c.JSON(http.StatusBadRequest, "invalid password ")
+	}
+
+	switch req.Operation {
+	case "sell":
+		auth, err := t.deribitClient.Auth(c.Request().Context())
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		request := request.Sell{
+			Token:    auth.AccessToken,
+			Amount:   req.Amount,
+			Currency: req.Currency,
+			Price:    req.Price,
+		}
+		if err := c.Validate(&request); err != nil {
+			log.Printf("failed to validate request, %s", err.Error())
+			return c.JSON(http.StatusBadRequest, err.Error())
+		}
+		sell, err := t.deribitClient.Sell(c.Request().Context(), request)
+		if err != nil {
+			log.Printf("error in sell product, %s", err.Error())
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(http.StatusOK, sell)
+	case "buy":
+		auth, err := t.deribitClient.Auth(c.Request().Context())
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		request := request.Buy{
+			Token:    auth.AccessToken,
+			Amount:   req.Amount,
+			Currency: req.Currency,
+		}
+		if err := c.Validate(&req); err != nil {
+			log.Printf("failed to validate request, %s", err.Error())
+			return c.JSON(http.StatusBadRequest, err.Error())
+		}
+		buy, err := t.deribitClient.Buy(c.Request().Context(), request)
+		if err != nil {
+			log.Printf("error in deribitClient.Buy, %s", err.Error())
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(http.StatusOK, buy)
+	default:
+		log.Printf("operation must be either sell or buy, operation = %s", req.Operation)
+		return c.JSON(http.StatusBadRequest, fmt.Errorf("operation must be either sell or buy"))
+	}
 }

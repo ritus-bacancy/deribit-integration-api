@@ -28,15 +28,15 @@ type App struct {
 
 func (a *App) initialize(config *config.Current) {
 	a.initServices(config)
-	a.initHandlers()
+	a.initHandlers(config)
 }
 
 func (a *App) initServices(config *config.Current) {
 	a.services.deribitService = deribit.NewClient(http.DefaultClient, config)
 }
 
-func (a *App) initHandlers() {
-	a.handlers.trading = handler.NewTrading(a.services.deribitService)
+func (a *App) initHandlers(config *config.Current) {
+	a.handlers.trading = handler.NewTrading(a.services.deribitService, config)
 }
 
 func (a *App) Set(e *echo.Echo, config *config.Current) {
@@ -49,4 +49,5 @@ func (a *App) Set(e *echo.Echo, config *config.Current) {
 	e.GET("/price", a.handlers.trading.GetPrice)
 	e.POST("/buy", a.handlers.trading.Buy)
 	e.POST("/sell", a.handlers.trading.Sell)
+	e.POST("/webhook", a.handlers.trading.Webhook)
 }
